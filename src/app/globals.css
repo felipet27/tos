@@ -1,0 +1,94 @@
+@import "tailwindcss";
+@import "./admin-modes.css";
+
+/* ============================================================
+   TOS — TwoFFactor Sistema Operativo
+   Los colores viven en admin-modes.css (Forja oscuro / Cristal claro).
+   ============================================================ */
+
+@theme {
+  /* Fuentes (Geist provisto por next/font) */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--tf-0B0C10-obsidiana);
+  color: var(--tf-C0C0C0-plata);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* iOS hace zoom al enfocar campos con texto menor a 16px: en móvil todos los
+   campos del panel usan 16px */
+@media (max-width: 639px) {
+  [data-tf-mode] :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    font-size: 16px;
+  }
+}
+
+/* Animaciones de entrada (animate-in + fade-in / zoom-in-95 / slide-in-from-*) */
+@keyframes tf-enter {
+  from {
+    opacity: var(--tf-enter-opacity, 1);
+    transform: translate3d(var(--tf-enter-x, 0), var(--tf-enter-y, 0), 0) scale(var(--tf-enter-scale, 1));
+  }
+}
+@utility animate-in {
+  animation: tf-enter 160ms ease-out both;
+}
+@utility fade-in {
+  --tf-enter-opacity: 0;
+}
+@utility zoom-in-95 {
+  --tf-enter-scale: 0.95;
+}
+@utility slide-in-from-top-2 {
+  --tf-enter-y: -0.5rem;
+}
+@utility slide-in-from-bottom-4 {
+  --tf-enter-y: 1rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-in {
+    animation: none;
+  }
+}
+
+/* Vista de impresión: solo el documento marcado con .tf-print-area (propuesta) */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .tf-print-area,
+  .tf-print-area * {
+    visibility: visible !important;
+  }
+  .tf-print-area {
+    position: fixed !important;
+    inset: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .tf-no-print {
+    display: none !important;
+  }
+}
+
+/* Scrollbars limpias para móviles */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

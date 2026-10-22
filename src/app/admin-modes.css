@@ -1,0 +1,233 @@
+/* ============================================================
+   Panel admin — dos mundos, dos factores
+   Factor 1 · FORJA (steampunk de taller, oscuro)
+   Factor 2 · CRISTAL (laboratorio futurista, claro)
+
+   Los componentes del panel usan tokens --tf-* en lugar de colores fijos.
+   En Forja cada token vale exactamente el color original, así que el modo
+   oscuro no cambia. Cristal solo redefine los tokens dentro del panel.
+   ============================================================ */
+
+:root {
+  /* Paleta principal Forja */
+  --tf-0B0C10-obsidiana: #0b0c10; /* negro obsidiana */
+  --tf-07090F-panel: #07090f;
+  --tf-B87333-cobre: #b87333; /* cobre oxidado */
+  --tf-E5A93C-laton: #e5a93c; /* latón envejecido */
+  --tf-22C55E-fosforo: #22c55e; /* verde fósforo */
+  --tf-22D3EE-cian: #22d3ee;
+  --tf-cyan: #22d3ee;
+  --tf-C0C0C0-plata: #c0c0c0; /* gris plata metálico */
+  --tf-94A3B8-niebla: #94a3b8;
+  --tf-white: #fff;
+  --tf-black: #000;
+
+  /* Grises */
+  --tf-64748B: #64748b;
+  --tf-6B7280: #6b7280;
+  --tf-5B6170: #5b6170;
+  --tf-555A68: #555a68;
+  --tf-888888: #888;
+  --tf-777777: #777;
+  --tf-666666: #666;
+  --tf-555555: #555;
+  --tf-333333: #333;
+
+  /* Superficies oscuras */
+  --tf-050A18: #050a18;
+  --tf-070912: #070912;
+  --tf-07080C: #07080c;
+  --tf-07080E: #07080e;
+  --tf-07090E: #07090e;
+  --tf-091512: #091512;
+  --tf-0B0D16: #0b0d16;
+  --tf-0C0E18: #0c0e18;
+  --tf-0C0F1D: #0c0f1d;
+  --tf-0C101C: #0c101c;
+  --tf-0C121D: #0c121d;
+  --tf-0D161A: #0d161a;
+  --tf-0F121D: #0f121d;
+  --tf-0F1718: #0f1718;
+  --tf-0F1322: #0f1322;
+  --tf-101320: #101320;
+  --tf-11131C: #11131c;
+  --tf-121422: #121422;
+  --tf-121524: #121524;
+  --tf-121626: #121626;
+  --tf-141624: #141624;
+  --tf-14161F: #14161f;
+  --tf-141829: #141829;
+  --tf-161927: #161927;
+  --tf-161B2B: #161b2b;
+  --tf-1A2038: #1a2038;
+  --tf-1C1E2D: #1c1e2d;
+  --tf-1C2030: #1c2030;
+  --tf-1C2237: #1c2237;
+  --tf-22263B: #22263b;
+  --tf-252E49: #252e49;
+  --tf-27304F: #27304f;
+  --tf-28314E: #28314e;
+
+  /* Madera, papel y bronce del taller */
+  --tf-292218: #292218;
+  --tf-1A140A: #1a140a;
+  --tf-3A2815: #3a2815;
+  --tf-42311B: #42311b;
+  --tf-634825: #634825;
+  --tf-8B693E: #8b693e;
+  --tf-E7D8BE: #e7d8be;
+  --tf-16A34A: #16a34a;
+
+  /* Colores de Tailwind usados por nombre */
+  --tf-red-300: oklch(80.8% 0.114 19.571);
+  --tf-red-400: oklch(70.4% 0.191 22.216);
+  --tf-red-500: oklch(63.7% 0.237 25.331);
+  --tf-red-900: oklch(39.6% 0.141 25.723);
+  --tf-red-950: oklch(25.8% 0.092 26.042);
+  --tf-blue-300: oklch(80.9% 0.105 251.813);
+  --tf-blue-500: oklch(62.3% 0.214 259.815);
+  --tf-blue-950: oklch(28.2% 0.091 267.935);
+
+  /* Tablero de planos */
+  --tf-checker-a: #2a2d36;
+  --tf-checker-b: #15171f;
+  --tf-checker-preview: #1a1c24;
+}
+
+/* ------------------------------------------------------------
+   CRISTAL — laboratorio futurista
+   Blanco perla, gris acero, azul eléctrico, azul profundo y
+   cobre rosado como puente con la Forja.
+   ------------------------------------------------------------ */
+[data-tf-mode="cristal"] {
+  color-scheme: light;
+
+  --tf-0B0C10-obsidiana: #f4f7fa; /* blanco perla */
+  --tf-07090F-panel: #ffffff;
+  --tf-B87333-cobre: #0f3a5f; /* estructura: azul profundo */
+  --tf-E5A93C-laton: #b97a69; /* cobre rosado (un punto más profundo para leerse sobre blanco) */
+  --tf-22C55E-fosforo: #2d8fcb; /* azul eléctrico: el verde fósforo solo vive en la Forja */
+  --tf-22D3EE-cian: #1597b8;
+  --tf-cyan: #1597b8;
+  --tf-C0C0C0-plata: #5a6573; /* gris acero */
+  --tf-94A3B8-niebla: #7b8794;
+  --tf-white: #1c2834; /* tinta para títulos */
+  --tf-black: #ffffff;
+
+  --tf-64748B: #6b7785;
+  --tf-6B7280: #6b7785;
+  --tf-5B6170: #94a0ad;
+  --tf-555A68: #94a0ad;
+  --tf-888888: #8a939e;
+  --tf-777777: #7e8792;
+  --tf-666666: #6e7782;
+  --tf-555555: #626b76;
+  --tf-333333: #cbd5e1;
+
+  /* Vidrio: superficies blancas con matices azulados */
+  --tf-050A18: #eef3f8;
+  --tf-070912: #ffffff;
+  --tf-07080C: #ffffff;
+  --tf-07080E: #ffffff;
+  --tf-07090E: #ffffff;
+  --tf-091512: #f2f8fc;
+  --tf-0B0D16: #ffffff;
+  --tf-0C0E18: #ffffff;
+  --tf-0C0F1D: #f7fafc;
+  --tf-0C101C: #f7fafc;
+  --tf-0C121D: #f7fafc;
+  --tf-0D161A: #f2f8fc;
+  --tf-0F121D: #f7fafc;
+  --tf-0F1718: #f2f8fc;
+  --tf-0F1322: #f7fafc;
+  --tf-101320: #f7fafc;
+  --tf-11131C: #f7fafc;
+  --tf-121422: #f0f4f8;
+  --tf-121524: #f0f4f8;
+  --tf-121626: #f0f4f8;
+  --tf-141624: #f0f4f8;
+  --tf-14161F: #f0f4f8;
+  --tf-141829: #f0f4f8;
+  --tf-161927: #eaf0f6;
+  --tf-161B2B: #eaf0f6;
+  --tf-1A2038: #eaf0f6;
+  --tf-1C1E2D: #e6edf4;
+  --tf-1C2030: #e6edf4;
+  --tf-1C2237: #e6edf4;
+  --tf-22263B: #dde7f1;
+  --tf-252E49: #dde7f1;
+  --tf-27304F: #dde7f1;
+  --tf-28314E: #dde7f1;
+
+  /* El bronce del taller se vuelve cobre rosado */
+  --tf-292218: #f8efec;
+  --tf-1A140A: #f8ece4;
+  --tf-3A2815: #f3e3de;
+  --tf-42311B: #ecd5ce;
+  --tf-634825: #d9b2a6;
+  --tf-8B693E: #b5776a;
+  --tf-E7D8BE: #4a3d39;
+  --tf-16A34A: #1f78b4;
+
+  --tf-red-300: #c53030;
+  --tf-red-400: #d64545;
+  --tf-red-500: #e04848;
+  --tf-red-900: #fad4d4;
+  --tf-red-950: #fdeeee;
+  --tf-blue-300: #1f6fa8;
+  --tf-blue-500: #2d8fcb;
+  --tf-blue-950: #e6f0fa;
+
+  --tf-checker-a: #e3e9f0;
+  --tf-checker-b: #f7f9fb;
+  --tf-checker-preview: #e8edf3;
+}
+
+/* Paneles de datos en azul profundo (barra superior y pie), como el panel
+   azul del laboratorio */
+[data-tf-mode="cristal"] [data-tf-surface="deep"] {
+  --tf-0B0C10-obsidiana: #0f3a5f;
+  --tf-07090F-panel: #0d3354;
+  --tf-B87333-cobre: #4a9ad4;
+  --tf-E5A93C-laton: #e8b7aa;
+  --tf-22C55E-fosforo: #7cc8f2;
+  --tf-22D3EE-cian: #7cc8f2;
+  --tf-cyan: #7cc8f2;
+  --tf-C0C0C0-plata: #d5e2ee;
+  --tf-94A3B8-niebla: #a9c0d6;
+  --tf-white: #ffffff;
+  --tf-black: #0a2742;
+  --tf-333333: #2b5a85;
+  --tf-07090E: #0f3a5f;
+  --tf-07080E: #0f3a5f;
+  --tf-11131C: #0f3a5f;
+  --tf-1C2030: #174a76;
+  --tf-141624: #164873;
+  --tf-161B2B: #164873;
+  --tf-1C2237: #164873;
+  --tf-22263B: #22598a;
+  --tf-252E49: #22598a;
+  --tf-28314E: #22598a;
+  --tf-red-300: #fca5a5;
+  --tf-red-950: #4a1d2a;
+  --tf-red-900: #6b2533;
+}
+
+/* Los resplandores de neón de la Forja se vuelven sombras suaves de vidrio */
+:where([data-tf-mode="cristal"], [data-tf-mode="cristal"] *) {
+  --tw-shadow-color: rgb(15 58 95 / 0.1);
+}
+
+/* Ajustes puntuales que solo existen en Cristal: `cristal:text-...` */
+@custom-variant cristal (&:where([data-tf-mode="cristal"] *));
+
+/* Tipografía Cristal: sans-serif limpia; las cifras conservan ancho fijo
+   (tabular) para que tablas y métricas sigan alineadas. Código, teclas y lo
+   marcado con .tf-mono se quedan en monoespaciada. */
+[data-tf-mode="cristal"] .font-mono:not(.tf-mono):not(kbd):not(code) {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+[data-tf-mode="cristal"] .tf-mono {
+  font-family: var(--font-mono);
+}
