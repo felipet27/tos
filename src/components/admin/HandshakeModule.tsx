@@ -23,6 +23,7 @@ import { navigate } from "./nav";
 import { useSession } from "./session";
 import { useFeedback } from "./ui/feedback";
 import { Badge, Button, Chip, Field, ModuleHeader, SectionTitle, cx, inputClass, panelClass, subPanelClass } from "./ui/kit";
+import type { ProgramId } from "./data/programs";
 
 type Tab = "planes" | "sla" | "clausulas" | "propuesta" | "programas";
 
@@ -653,8 +654,6 @@ function DocSection({ title, children }: { title: string; children: ReactNode })
 
 // ------------------------------------------------------------------ 05 · programs
 
-type ProgramId = "fundador" | "idea" | "roi";
-
 const PROGRAMS: {
   id: ProgramId;
   kicker: string;
@@ -668,53 +667,53 @@ const PROGRAMS: {
 }[] = [
   {
     id: "fundador",
-    kicker: "PROGRAMA 01 // ESTATUS VITALICIO & PRIVILEGIOS DE ARQUITECTO",
-    title: "PROGRAMA DE CLIENTE FUNDADOR // FOUNDING PARTNER STATUS",
-    badge: "CUPO LIMITADO: PRIMEROS 10 CLIENTES",
-    what: "Diseñado para empresas pioneras que deciden blindar su operativa con Twoffactor desde etapas tempranas. Este estatus asegura que su empresa nunca experimente aumentos de tarifa en el futuro, disfrutando de soporte directo 24/7 con los directores arquitectos (Felipe Tangarife y Juan Pablo Hurtado), onboarding 100% bonificado y prioridad absoluta para co-crear funcionalidades a la medida de su infraestructura.",
+    kicker: "PROGRAMA 01 // MODELO DE REFERIDOS PARA EL CLIENTE FUNDADOR",
+    title: "PROGRAMA DE CLIENTE FUNDADOR",
+    badge: "VALORES PROPUESTOS · PENDIENTE VALIDACIÓN LEGAL",
+    what: "El cliente fundador es el primer cliente de una solución: su proyecto da origen a una plataforma que después puede servir a otros negocios del mismo sector. El programa premia al cliente fundador por recomendar la solución a nuevos negocios con descuentos progresivos en su mensualidad, horas adicionales de mejoras y, desde 10 referidos activos, una comisión mensual como aliado comercial. Cuenta como referido un negocio independiente (dueño distinto) que haya contratado y pagado al menos 2 meses. No cuentan sedes del mismo dueño, usuarios gratuitos dentro del sistema de otro cliente, ni negocios ya en conversación con el proveedor. El proveedor puede aceptar o rechazar cualquier referido. Las condiciones legales y tributarias deben validarse con abogado y contador antes de firmar el primer acuerdo.",
     pillars: [
-      { title: "1. TARIFA VITALICIA CONGELADA", value: "25% Descuento Perpetuo", detail: "El precio mensual no aumentará jamás durante toda la vigencia del contrato." },
-      { title: "2. ENLACE DIRECTO FUNDADORES", value: "WhatsApp & Slack Privado 24/7", detail: "Contacto directo con Felipe y Juan Pablo para contingencias y estrategia técnica." },
-      { title: "3. ONBOARDING & SETUP BONIFICADO", value: "$0 USD Costo de Entrada", detail: "Despliegue de conectores mTLS, enclaves bicéfalos y pruebas 100% bonificado." },
-      { title: "4. CO-CREACIÓN DE ROADMAP", value: "Voz y Voto en Features", detail: "Prioridad para incorporar casos de uso e integraciones que su negocio requiera." },
+      { title: "1. ESCALERA DE DESCUENTOS", value: "10% por referido · tope 50%", detail: "Cada referido activo que haya pagado 2 meses reduce un 10% la mensualidad del cliente fundador. El tope es 50% con 5 referidos. Si un referido se retira, se pierde ese 10%. El descuento es sobre la mensualidad del plan, nunca en efectivo." },
+      { title: "2. BOLSA DE MEJORAS", value: "+1 h/mes por referido (6–9)", detail: "Entre el 6.º y el 9.º referido activo, cada uno suma 1 hora mensual adicional a la bolsa de mejoras, hasta 4 horas extra al mes. Se mantiene el 50% de descuento." },
+      { title: "3. ACUERDO DE ALIADO COMERCIAL", value: "Comisión 10% desde referido 10 (propuesto)", detail: "Con 10 referidos activos se ofrece un contrato de aliado: 10% de la mensualidad de cada negocio nuevo referido, pagada cada mes mientras ese negocio esté activo, durante un máximo de 24 meses por negocio. El aliado debe facturar o presentar cuenta de cobro; puede haber retención en la fuente." },
+      { title: "4. SEGUIMIENTO MENSUAL", value: "Registro por cliente fundador", detail: "Se lleva un registro con: negocio referido, fecha de firma, meses pagados, estado (activo o retirado) y beneficio vigente. El beneficio se revisa y aplica en cada facturación mensual." },
     ],
-    messageTitle: "Mensaje Institucional de Ejemplo // Bienvenida a Cliente Fundador:",
+    messageTitle: "Cómo presentarlo al cliente:",
     message:
-      "Estimado equipo directivo: Nos complace confirmar su incorporación oficial al Programa de Cliente Fundador de Twoffactor. A partir de este momento, su tarifa mensual queda formalmente congelada de por vida con un 25% de bonificación institucional. Su conector mTLS ha sido desplegado sin costo de setup y cuentan con enlace privado 24/7 directo con Felipe y Juan Pablo para cualquier requerimiento de alta prioridad.",
+      "Por cada negocio que nos recomienden y siga activo, su mensualidad baja un 10%, hasta la mitad. Si siguen recomendando, suman horas de mejoras para su sistema, y desde 10 negocios se vuelven aliados: reciben una comisión por cada negocio nuevo. Los negocios que nos recomienden firman su propio contrato con nosotros; ustedes reciben el beneficio por haberlos recomendado.",
     tone: "laton",
   },
   {
     id: "idea",
-    kicker: "PROGRAMA 02 // INCUBACIÓN TÉCNICA & DE CONCEPTO A PRODUCCIÓN",
-    title: "PROGRAMA DESARROLLA TU IDEA // FROM CONCEPT TO SCALE",
-    badge: "CONVOCATORIA ABIERTA PARA STARTUPS",
-    what: "Creado especialmente para startups, fundadores técnicos y equipos de innovación que tienen una visión o producto digital en fase temprana. Proveemos la base técnica bicéfala, acompañamiento en diseño de arquitectura segura y mentorías de alto nivel para acelerar el paso de la idea a un aplicativo escalable en producción, sin comprometer la seguridad ni incurrir en costos prohibitivos de infraestructura.",
+    kicker: "PROGRAMA 02 // INCUBACIÓN & DESARROLLO DE IDEAS",
+    title: "PROGRAMA DESARROLLA TU IDEA",
+    badge: "CONVOCATORIA ABIERTA",
+    what: "Un cliente, empresa o persona nos trae una idea para una aplicación o plataforma digital. Twoffactor la evalúa para determinar si es técnica y comercialmente viable. Si el proyecto es viable, lo desarrollamos juntos: Twoffactor aporta la arquitectura, el desarrollo y la operación; el cliente aporta la visión del negocio y el conocimiento del sector. Los dividendos del proyecto resultante se dividen entre ambas partes según las condiciones acordadas en la propuesta de cada caso. Si la evaluación concluye que el proyecto no es viable, el proceso termina sin ningún costo para el cliente.",
     pillars: [
-      { title: "1. ARQUITECTURA DESDE DÍA CERO", value: "Diseño Bicéfalo & Enclaves", detail: "Estructuración de flujos Zero-Knowledge y modelos de datos resilientes." },
-      { title: "2. SUBSIDIO SEMILLA (SEED)", value: "Hasta 40% OFF por 6 Meses", detail: "Alivio financiero en la fase de desarrollo para optimizar su capital de trabajo." },
-      { title: "3. MENTORÍA TÉCNICA MENSUAL", value: "4h/mes de Pair Programming", detail: "Revisión de código de alta concurrencia y auditoría previa al lanzamiento." },
-      { title: "4. CERTIFICACIÓN TWOFFACTOR", value: "Insignia Twoffactor Ready", detail: "Sello que avala la seguridad de su plataforma ante inversores y clientes B2B." },
+      { title: "1. EVALUACIÓN DE VIABILIDAD", value: "Sin costo si no avanza", detail: "Analizamos la idea, el mercado y la factibilidad técnica. Si el proyecto no es viable, el proceso termina sin cobros al cliente." },
+      { title: "2. ACUERDO DE DIVIDENDOS", value: "Definido por propuesta", detail: "Si el proyecto es viable, acordamos la distribución de dividendos entre el cliente y Twoffactor. El porcentaje y las condiciones se definen en la propuesta específica de cada caso." },
+      { title: "3. DESARROLLO Y OPERACIÓN", value: "Twoffactor ejecuta", detail: "Twoffactor aporta arquitectura, ingeniería y operación de la plataforma. El cliente aporta la visión de negocio, el conocimiento del sector y la validación del producto." },
+      { title: "4. CO-PROPIEDAD DEL RESULTADO", value: "Proyecto compartido", detail: "Ambas partes son co-dueñas del proyecto resultante según lo definido en el contrato de cada caso. Se presenta al cliente sin propuesta económica de pago directa; el retorno es vía dividendos." },
     ],
-    messageTitle: "Mensaje Institucional de Ejemplo // Admisión a Desarrolla tu Idea:",
+    messageTitle: "Cómo presentarlo al cliente:",
     message:
-      "¡Enhorabuena! Su proyecto ha sido seleccionado para el Programa 'Desarrolla tu Idea'. Durante los próximos 6 meses contarán con una bonificación del 40% en infraestructura bicéfala, 4 horas mensuales de sesión 1-a-1 de pair programming con Felipe y Juan Pablo, y acompañamiento paso a paso para lanzar su MVP al mercado con certificación de seguridad de grado bancario.",
+      "Tenemos una idea para una plataforma que resuelve un problema real en nuestro sector. Ustedes evalúan la viabilidad y, si el proyecto avanza, lo desarrollamos juntos con un acuerdo de dividendos. Si la evaluación determina que no es viable, no hay ningún costo. ¿Podemos agendar una sesión de evaluación?",
     tone: "fosforo",
   },
   {
     id: "roi",
-    kicker: "PROGRAMA 03 // OPTIMIZACIÓN FINANCIERA & RENDIMIENTO DEMOSTRABLE",
-    title: "PROGRAMA RETORNO DE INVERSIÓN // ROI & EFFICIENCY GUARANTEE",
-    badge: "GARANTÍA CONTRACTUAL DE EFICIENCIA",
-    what: "Dirigido a directores financieros (CFO) y líderes de ingeniería que buscan garantizar que cada dólar invertido en seguridad genere un impacto económico medible. El programa cuantifica y valida el ahorro producido por la eliminación de caídas no planificadas, optimiza los consumos sobredimensionados de servidores cloud y respalda el cumplimiento del servicio mediante créditos económicos automáticos penalizables por contrato.",
+    kicker: "PROGRAMA 03 // INVERSIÓN & PARTICIPACIÓN EN PROYECTOS",
+    title: "PROGRAMA RETORNO DE INVERSIÓN",
+    badge: "OPORTUNIDAD DE INVERSIÓN",
+    what: "Dirigido a empresas, personas o fondos que quieren ser accionistas de un proyecto digital. El inversor aporta capital a un proyecto específico en desarrollo sobre la plataforma Twoffactor, o a Twoffactor en general. A cambio, recibe un retorno económico (dividendos) definido por contrato, proporcional a su inversión y al desempeño del proyecto. El monto mínimo de inversión y el porcentaje de retorno dependen de cada proyecto y se formalizan en un contrato aparte. El inversor puede elegir en qué proyecto participar o invertir en el portafolio general de Twoffactor.",
     pillars: [
-      { title: "1. CERO PÉRDIDAS POR DOWNTIME", value: "Conmutación Active-Active < 400 ms", detail: "Elimina las pérdidas comerciales generadas por caídas imprevistas de pasarelas o BD." },
-      { title: "2. REDUCCIÓN DE GASTO CLOUD", value: "Hasta 30% Ahorro Cómputo", detail: "Optimización de servidores sobredimensionados mediante enclaves criptográficos ligeros." },
-      { title: "3. GARANTÍA CONTRACTUAL SLA", value: "Créditos 15% - 50% Cuota", detail: "Créditos automáticos en la mensualidad ante cualquier incumplimiento del SLA (Cláusula 3)." },
-      { title: "4. DOSSIER DE VALOR PARA JUNTA", value: "Reporte Trimestral de Retorno", detail: "Informe financiero con métricas de transacciones seguras y dinero protegido." },
+      { title: "1. SELECCIÓN DEL PROYECTO", value: "Específico o portafolio general", detail: "El inversor elige un proyecto concreto en desarrollo (por ejemplo, un producto del programa 'Desarrolla tu Idea') o participa en el portafolio general de Twoffactor." },
+      { title: "2. CONTRATO DE INVERSIÓN", value: "Condiciones definidas por proyecto", detail: "Monto mínimo, porcentaje de retorno y plazo se definen en cada contrato. Puede haber retención en la fuente sobre los dividendos: se recomienda validar con contador." },
+      { title: "3. RETORNO ECONÓMICO", value: "Dividendos mientras el proyecto esté activo", detail: "El inversor recibe participación económica proporcional a su inversión y al desempeño del proyecto, durante el plazo definido en el contrato." },
+      { title: "4. ALIADO ESTRATÉGICO", value: "Más que un inversor", detail: "Como accionista, el inversor forma parte del crecimiento del proyecto. Puede participar en decisiones estratégicas según lo acordado en el contrato de inversión." },
     ],
-    messageTitle: "Mensaje Institucional de Ejemplo // Reporte de Retorno de Inversión:",
+    messageTitle: "Cómo presentarlo al cliente:",
     message:
-      "Adjunto presentamos el Informe Ejecutivo de Retorno de Inversión (ROI) del período: Durante este trimestre, la arquitectura bicéfala neutralizó 3 incidentes de indisponibilidad en la nube, salvaguardando un estimado de $22,800 USD en ventas y transacciones operativas. Adicionalmente, la reestructuración de nodos permitió reducir un 24% del gasto en cómputo externo, logrando un ROI neto de 3.2x sobre la inversión mensual.",
+      "Con Twoffactor puedes invertir en un proyecto digital específico o en nuestro portafolio en general. Definimos juntos el monto, el porcentaje de retorno y el plazo en un contrato formal. Mientras el proyecto esté activo y generando ingresos, recibes tu participación económica. ¿Te interesa conocer los proyectos disponibles para invertir?",
     tone: "cian",
   },
 ];

@@ -17,9 +17,11 @@ import {
   tasksStore,
 } from "../data/tasks";
 import { OPERATORS, OperatorName, partnerOf } from "../data/operators";
-import { parseStamp, toDateTimeInput, todayStamp } from "../data/time";
+import { useClients } from "../data/clients";
+import { nowStamp, parseStamp, toDateTimeInput, todayStamp } from "../data/time";
 import { useFeedback } from "../ui/feedback";
 import { Modal } from "../ui/Modal";
+import { DateTimePicker } from "../ui/DateTimePicker";
 import { Button, Field, cx, inputClass, subPanelClass } from "../ui/kit";
 
 const POINTS = [1, 2, 3, 5, 8];
@@ -51,6 +53,7 @@ export function TaskFormModal({
   onClose: () => void;
 }) {
   const { toast, confirm } = useFeedback();
+  const clients = useClients().filter((c) => !c.archived);
   const [title, setTitle] = useState(task?.title ?? "");
   const [description, setDescription] = useState(task?.description ?? "");
   const [repo, setRepo] = useState<RepoName>(task?.repo ?? "twoffactor/web");
@@ -61,11 +64,12 @@ export function TaskFormModal({
   const [points, setPoints] = useState(task?.storyPoints ?? 3);
   const [status, setStatus] = useState<TaskStatus>(task?.status ?? (defaultStatus === "Desplegado" ? "Por Hacer" : defaultStatus ?? "Por Hacer"));
   const [sprintId, setSprintId] = useState(task ? task.sprintId ?? "" : defaultSprintId ?? "");
+  const [clientId, setClientId] = useState(task?.clientId ?? "");
   const [start, setStart] = useState(() => (task ? inputDate(task.startDate) : toDateTimeInput(new Date())));
   const [due, setDue] = useState(() => (task ? inputDate(task.dueDateTime) : toDateTimeInput(new Date(Date.now() + 24 * 3_600_000))));
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const formId = task ? `task-${task.id}` : "task-new";
+  const formId = task ? `form-task-${task.id}` : "form-task-new";
   const openSprints = sprints.filter((s) => s.status !== "cerrado" || s.id === task?.sprintId);
 
   function preset(hours: number) {
@@ -108,6 +112,7 @@ export function TaskFormModal({
         startDate: startStamp,
         dueDateTime: dueStamp,
         sprintId: sprintId || undefined,
+        clientId: clientId || undefined,
         history: [auditLog(me, "Tarea creada y asignada a {name}", { name: assignee })],
       };
       if (status !== "Por Hacer") {
@@ -130,6 +135,7 @@ export function TaskFormModal({
     if (points !== task.storyPoints) changes.push("story points");
     if (startStamp !== task.startDate || dueStamp !== task.dueDateTime) changes.push("fechas");
     if ((sprintId || undefined) !== task.sprintId) changes.push("sprint");
+    if ((clientId || undefined) !== task.clientId) changes.push("cliente");
 
     let next: DevTask = {
       ...task,
@@ -144,6 +150,7 @@ export function TaskFormModal({
       startDate: startStamp,
       dueDateTime: dueStamp,
       sprintId: sprintId || undefined,
+      clientId: clientId || undefined,
     };
     if (changes.length || reason.trim()) {
       next = { ...next, history: [auditLog(me, changes.length ? "Campos editados: {fields}" : "Nota de seguimiento", changes.length ? { fields: changes.join(", ") } : undefined, reason.trim() || undefined), ...next.history] };
@@ -170,6 +177,29 @@ export function TaskFormModal({
     onClose();
   }
 
+  function duplicate() {
+    if (!task) return;
+    const partner = partnerOf(task.assignee);
+    tasksStore.set((list) => {
+      const id = nextTaskId(list);
+      const copy: DevTask = {
+        ...task,
+        id,
+        assignee: partner,
+        status: "Por Hacer",
+        commitSha: undefined,
+        completedAt: undefined,
+        review: undefined,
+        createdAt: todayStamp(),
+        startDate: nowStamp(),
+        history: [auditLog(me, "Copiada desde {id}", { id: task.id })],
+      };
+      return [copy, ...list];
+    });
+    toast(tr("Tarea copiada y asignada a {name}", { name: partner }));
+    onClose();
+  }
+
   return (
     <Modal
       open
@@ -185,6 +215,11 @@ export function TaskFormModal({
           {task && (
             <Button size="sm" variant="danger" className="mr-auto" onClick={remove}>
               🗑 {tr("Eliminar")}
+            </Button>
+          )}
+          {task && (
+            <Button size="sm" variant="cian" onClick={duplicate}>
+              ⎘ {tr("Copiar a {name}", { name: partnerOf(assignee) })}
             </Button>
           )}
           <Button onClick={onClose}>{tr("Cancelar")}</Button>
@@ -207,14 +242,16 @@ export function TaskFormModal({
           <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} placeholder={tr("Detalles técnicos, endpoints o tests requeridos...")} className={inputClass} />
         </Field>
 
-        <div className={cx(subPanelClass, "grid grid-cols-1 gap-3 p-3 sm:grid-cols-2")}>
-          <Field label={tr("Inicio")}>
-            <input type="datetime-local" required value={start} onChange={(e) => { setStart(e.target.value); setError(null); }} className={inputClass} />
-          </Field>
-          <Field label={tr("Hora límite *")}>
-            <input type="datetime-local" required min={start} value={due} onChange={(e) => { setDue(e.target.value); setError(null); }} className={inputClass} />
-          </Field>
-          <div className="flex flex-wrap items-center gap-1.5 sm:col-span-2">
+        <div className={cx(subPanelClass, "space-y-3 p-3")}>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Field label={tr("Inicio")}>
+              <DateTimePicker value={start} onChange={(v) => { setStart(v); setError(null); }} />
+            </Field>
+            <Field label={tr("Hora límite *")}>
+              <DateTimePicker value={due} onChange={(v) => { setDue(v); setError(null); }} min={start} />
+            </Field>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-[10px] text-(color:--tf-94A3B8-niebla)">{tr("Atajos desde el inicio:")}</span>
             {[4, 12, 24, 72].map((h) => (
               <Button key={h} size="xs" onClick={() => preset(h)}>
@@ -249,6 +286,16 @@ export function TaskFormModal({
               {openSprints.map((s) => (
                 <option key={s.id} value={s.id}>
                   {tr(s.name)}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label={tr("Cliente")} className="sm:col-span-3">
+            <select value={clientId} onChange={(e) => setClientId(e.target.value)} className={inputClass}>
+              <option value="">{tr("Sin cliente asociado")}</option>
+              {clients.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.id} · {c.name}
                 </option>
               ))}
             </select>

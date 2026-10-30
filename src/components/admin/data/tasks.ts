@@ -58,6 +58,7 @@ export interface DevTask {
   dueDateTime: string;
   completedAt?: string;
   sprintId?: string;
+  clientId?: string;
   ideaId?: string;
   review?: TaskReview;
   history: AuditLog[];
@@ -144,6 +145,7 @@ function sanitizeTask(raw: RawTask): DevTask {
     dueDateTime: raw.dueDateTime ?? `${createdAt} 18:00`,
     completedAt: status === "Desplegado" ? raw.completedAt ?? createdAt : undefined,
     sprintId: raw.sprintId,
+    clientId: typeof raw.clientId === "string" ? raw.clientId : undefined,
     ideaId: raw.ideaId,
     review,
     history: Array.isArray(raw.history) ? raw.history : [],

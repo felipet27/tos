@@ -5,6 +5,7 @@ import { OPERATOR_NODES, OperatorName, normalizeOperator, partnerOf } from "./op
 import { PLAN_NAMES, OperationPlan, getPlan, planSlaLabel } from "./plans";
 import { nowStamp, todayStamp } from "./time";
 import { SEED_CLIENTS } from "./seedClients";
+import { ProgramId, PROGRAM_IDS } from "./programs";
 
 // ------------------------------------------------------------------ stages
 
@@ -163,6 +164,7 @@ export interface ClientRecord {
   token2FA: string;
   currentStage: ProjectStageId;
   createdBy: OperatorName;
+  programs?: ProgramId[];
   archived: boolean;
   archivedAt?: string;
   telemetryUrl: string;
@@ -335,6 +337,7 @@ export function sanitizeClient(raw: RawClient, index: number): ClientRecord {
     token2FA: str(c.token2FA),
     currentStage,
     createdBy,
+    programs: Array.isArray(c.programs) ? (c.programs as unknown[]).filter((id): id is ProgramId => PROGRAM_IDS.includes(id as ProgramId)) : undefined,
     archived: c.archived === true,
     archivedAt: typeof c.archivedAt === "string" ? c.archivedAt : undefined,
     telemetryUrl: str(c.telemetryUrl),

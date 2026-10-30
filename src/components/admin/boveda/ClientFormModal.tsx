@@ -15,6 +15,7 @@ import {
 import { OperatorName } from "../data/operators";
 import { OPERATION_PLANS, OperationPlan, getPlan, planPriceLabel } from "../data/plans";
 import { todayStamp } from "../data/time";
+import { ProgramId, PROGRAM_IDS, PROGRAM_META } from "../data/programs";
 import { Modal } from "../ui/Modal";
 import { Button, Field, cx, inputClass } from "../ui/kit";
 
@@ -79,8 +80,13 @@ export function ClientFormModal({
           notes: "",
         }
   );
+  const [programs, setPrograms] = useState<ProgramId[]>(client?.programs ?? []);
   const [error, setError] = useState<string | null>(null);
   const formId = `client-form-${mode}`;
+
+  function toggleProgram(id: ProgramId) {
+    setPrograms((prev) => prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]);
+  }
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -124,6 +130,7 @@ export function ClientFormModal({
           createdAt: todayStamp(),
           notes: form.notes.trim(),
           token2FA: generateClientToken(name),
+          programs: programs.length ? programs : undefined,
           currentStage: 1,
           createdBy: me,
           stageValidations: [],
@@ -149,6 +156,8 @@ export function ClientFormModal({
     if (form.notes.trim() !== client.notes) changed.push("notas");
 
     const planChanged = form.plan !== client.plan;
+    const programsChanged = JSON.stringify([...(client.programs ?? [])].sort()) !== JSON.stringify([...programs].sort());
+    if (programsChanged) changed.push("programas");
     updateClient(
       client.id,
       (c) => ({
@@ -164,6 +173,7 @@ export function ClientFormModal({
         nodesAssigned: nodes,
         token2FA: form.token2FA.trim() || c.token2FA,
         notes: form.notes.trim(),
+        programs: programs.length ? programs : undefined,
         activity: [
           ...(planChanged ? [activity(me, "Plan cambiado de {from} a {to}", { from: client.plan, to: form.plan })] : []),
           ...(changed.length ? [activity(me, "Ficha actualizada: {fields}", { fields: changed.join(", ") })] : []),
@@ -281,6 +291,38 @@ export function ClientFormModal({
             </div>
           </Field>
         )}
+
+        <div>
+          <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(color:--tf-E5A93C-laton)">{tr("Programas (opcional)")}</span>
+          <p className="mb-2 text-[11px] text-(color:--tf-94A3B8-niebla)">{tr("Un cliente puede participar en uno o varios programas. Se puede cambiar en cualquier momento.")}</p>
+          <div className="flex flex-wrap gap-2">
+            {PROGRAM_IDS.map((id) => {
+              const meta = PROGRAM_META[id];
+              const active = programs.includes(id);
+              const toneClass = meta.tone === "laton"
+                ? "border-(color:--tf-E5A93C-laton) bg-(color:--tf-E5A93C-laton)/20 text-(color:--tf-E5A93C-laton)"
+                : meta.tone === "fosforo"
+                ? "border-(color:--tf-22C55E-fosforo) bg-(color:--tf-22C55E-fosforo)/20 text-(color:--tf-22C55E-fosforo)"
+                : "border-(color:--tf-22D3EE-cian) bg-(color:--tf-22D3EE-cian)/20 text-(color:--tf-22D3EE-cian)";
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => toggleProgram(id)}
+                  className={cx(
+                    "rounded-lg border px-3 py-1.5 text-[11px] font-bold transition-colors pointer-coarse:min-h-10",
+                    active
+                      ? toneClass
+                      : "border-(color:--tf-B87333-cobre)/30 bg-(color:--tf-black)/40 text-(color:--tf-94A3B8-niebla) hover:text-(color:--tf-white) hover:border-(color:--tf-B87333-cobre)/70"
+                  )}
+                >
+                  {meta.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <Field label={tr("Notas base, alcance y especificaciones técnicas")}>
           <textarea rows={3} value={form.notes} onChange={(e) => set("notes", e.target.value)} placeholder={tr("Notas de contexto, requerimientos específicos de infraestructura, etc.")} className={inputClass} />
